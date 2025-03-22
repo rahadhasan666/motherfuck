@@ -1,0 +1,22 @@
+body {
+    background-color: black;
+    color: green;
+    text-align: center;
+    font-family: Arial;
+}
+h1 {
+    color: red;
+    text-shadow: 2px 2px 5px green;
+}
+input, button {
+    margin: 10px;
+    padding: 10px;
+    font-size: 16px;
+    background: black;
+    color: green;
+    border: 1px solid green;
+}
+button:hover {
+    background: green;
+    color: black;
+}
