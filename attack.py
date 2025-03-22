@@ -13,7 +13,7 @@ chrome_options.add_experimental_option("useAutomationExtension", False)
 
 # ✅ Start Attack Function
 def attack(url, total_requests):
-    service = Service("/path/to/chromedriver")  # ✅ Change this to your chromedriver path
+    service = Service("/usr/local/bin/chromedriver")  # ✅ Path ঠিক করে দাও  # ✅ Change this to your chromedriver path
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     for _ in range(total_requests):
