@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DARK WORLD</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>DARK WORLD</h1>
+    <form id="attackForm">
+        <input type="text" name="url" placeholder="Target Website URL" required><br>
+        <input type="number" name="requests" placeholder="Number of Requests" required><br>
+        <input type="number" name="rps" value="500" required><br>
+        <button type="submit">Start Attack</button>
+    </form>
+    <div id="output"></div>
+    <p>Made By Rahad Hasan</p>
+    <a href="https://www.github.com/rahadhasan666">GitHub</a>
+    
+    <script>
+        document.getElementById("attackForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let formData = new FormData(this);
+            fetch("/start_attack", { method: "POST", body: formData })
+            .then(response => response.json())
+            .then(data => { document.getElementById("output").innerHTML = data.message; });
+        });
+    </script>
+</body>
+</html>
